@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse & Godown Rental | Twiga Foods Thika Depot</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary-green: #44713F;
+            --secondary-green: #99B076;
+            --accent-yellow: #F4C430;
+            --dark-text: #1F2937;
+            --muted-gray: #6B7280;
+            --off-white: #FAFBFA;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--off-white);
+            color: var(--dark-text);
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green), var(--accent-yellow));
+            z-index: 9999;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        /* Hero Parallax */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: -50px;
+            background: linear-gradient(135deg, rgba(68, 113, 63, 0.9), rgba(153, 176, 118, 0.8)),
+                        url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1920&q=80') center/cover;
+            transform: translateZ(-10px) scale(2);
+            will-change: transform;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 3D Card Effects */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .tilt-card:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+        }
+
+        /* Flip Cards */
+        .flip-card {
+            perspective: 1000px;
+            height: 280px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Button Effects */
+        .btn-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .btn-3d:hover {
+            transform: translateY(-4px) translateZ(10px);
+            box-shadow: 0 20px 40px rgba(68, 113, 63, 0.4);
+        }
+
+        .btn-3d::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.3) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-3d:hover::before {
+            opacity: 1;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-effect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Floating Badge */
+        .floating-badge {
+            animation: float 3s ease-in-out infinite, subtle-rotate 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes subtle-rotate {
+            0%, 100% { transform: rotateY(0deg) translateY(0); }
+            25% { transform: rotateY(5deg) translateY(-5px); }
+            50% { transform: rotateY(0deg) translateY(-10px); }
+            75% { transform: rotateY(-5deg) translateY(-5px); }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            animation: scroll-bounce 2s infinite;
+        }
+
+        @keyframes scroll-bounce {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(10px); opacity: 0.5; }
+        }
+
+        /* Icon Animations */
+        .icon-float {
+            animation: icon-float 3s ease-in-out infinite;
+        }
+
+        @keyframes icon-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(3deg); }
+        }
+
+        /* Glow Effect */
+        .glow-effect {
+            transition: all 0.3s ease;
+        }
+
+        .glow-effect:hover {
+            box-shadow: 0 0 30px rgba(68, 113, 63, 0.4), 0 0 60px rgba(153, 176, 118, 0.2);
+        }
+
+        /* SVG Line Animation */
+        .draw-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        .draw-line.animate {
+            animation: draw 1.5s ease forwards;
+        }
+
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Checkmark Animation */
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+        }
+
+        .checkmark-check {
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+        }
+
+        .checkmark.animate .checkmark-circle {
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark.animate .checkmark-check {
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.4s forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        /* Blob Animation */
+        .blob {
+            animation: blob-morph 8s ease-in-out infinite;
+        }
+
+        @keyframes blob-morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        /* Magnetic Effect */
+        .magnetic-card {
+            transition: transform 0.3s ease;
+        }
+
+        /* Gradient Animation */
+        .animated-gradient {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green), var(--primary-green));
+            background-size: 200% 200%;
+            animation: gradient-shift 4s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Star Rating */
+        .star-rating i {
+            color: var(--accent-yellow);
+        }
+
+        /* Timeline connector */
+        .timeline-connector {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            transform: translateY(-50%);
+        }
+
+        /* Step Card 3D */
+        .step-card {
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+        }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Text Highlight */
+        .highlight-text {
+            background: linear-gradient(120deg, transparent 0%, transparent 50%, rgba(153, 176, 118, 0.4) 50%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+            transition: background-position 0.5s ease;
+        }
+
+        .highlight-text.active {
+            background-position: 0 0;
+        }
+
+        /* Particle container */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-yellow);
+            border-radius: 50%;
+            animation: particle-explode 0.8s ease-out forwards;
+        }
+
+        @keyframes particle-explode {
+            to {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Counter animation */
+        .counter {
+            display: inline-block;
+        }
+
+        /* Nav styles */
+        .nav-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-fixed.visible {
+            transform: translateY(0);
+        }
+
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* 3D Badge */
+        .badge-3d {
+            transform-style: preserve-3d;
+            animation: badge-float 4s ease-in-out infinite;
+        }
+
+        @keyframes badge-float {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            25% { transform: translateY(-5px) rotateY(10deg); }
+            50% { transform: translateY(-10px) rotateY(0deg); }
+            75% { transform: translateY(-5px) rotateY(-10deg); }
+        }
+
+        /* Carousel */
+        .carousel-3d {
+            perspective: 1000px;
+        }
+
+        .carousel-item {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Particles Container -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Fixed Navigation -->
+    <nav class="nav-fixed" id="fixedNav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: var(--primary-green);">
+                        <i class="fas fa-leaf text-white"></i>
+                    </div>
+                    <span class="font-bold text-lg" style="color: var(--primary-green);">Twiga Foods</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-sm font-medium hover:text-[#44713F] transition">Home</a>
+                    <a href="about.html" class="text-sm font-medium hover:text-[#44713F] transition">About</a>
+                    <a href="services.html" class="text-sm font-medium hover:text-[#44713F] transition">Services</a>
+                    <a href="facilities.html" class="text-sm font-medium hover:text-[#44713F] transition">Facilities</a>
+                    <a href="https://wa.me/254700000000" target="_blank" class="btn-3d px-4 py-2 rounded-full text-white text-sm font-medium" style="background: var(--primary-green);">Get a Quote</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero-section flex items-center justify-center" id="hero">
+        <div class="hero-bg" id="heroBg"></div>
+        
+        <!-- Floating decorative elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-10 w-20 h-20 rounded-full opacity-20 blob" style="background: var(--accent-yellow);"></div>
+            <div class="absolute bottom-40 right-20 w-32 h-32 rounded-full opacity-10 blob" style="background: white; animation-delay: -4s;"></div>
+            <div class="absolute top-1/3 right-1/4 w-16 h-16 rounded-full opacity-15 blob" style="background: var(--secondary-green); animation-delay: -2s;"></div>
+        </div>
+
+        <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white py-20">
+            <!-- Floating Badge -->
+            <div class="floating-badge inline-flex items-center px-4 py-2 rounded-full mb-8 opacity-0" id="heroBadge" style="background: rgba(244, 196, 48, 0.9);">
+                <i class="fas fa-star text-white mr-2"></i>
+                <span class="text-sm font-semibold text-white">Trusted by 500+ Businesses</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                <span class="hero-word opacity-0">Warehouse</span>
+                <span class="hero-word opacity-0">&</span>
+                <span class="hero-word opacity-0">Godown</span>
+                <br>
+                <span class="hero-word opacity-0" style="color: var(--accent-yellow);">Rental</span>
+            </h1>
+
+            <!-- Subheadline -->
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-0" id="heroSubtext" style="color: rgba(255,255,255,0.9);">
+                Premium storage solutions for vendors, wholesalers, and agribusinesses. 
+                Secure, flexible, and strategically located in Thika, Kenya.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center opacity-0" id="heroCtas">
+                <button class="btn-3d px-8 py-4 rounded-full text-lg font-semibold flex items-center gap-2" 
+                        style="background: var(--accent-yellow); color: var(--dark-text);"
+                        onclick="createRipple(event); scrollToSection('cta')">
+                    <i class="fas fa-file-invoice"></i>
+                    Get a Quote
+                </button>
+                <button class="btn-3d px-8 py-4 rounded-full text-lg font-semibold flex items-center gap-2 border-2 border-white text-white bg-transparent hover:bg-white/10"
+                        onclick="createRipple(event); scrollToSection('contact')">
+                    <i class="fas fa-phone"></i>
+                    Contact Us
+                </button>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto opacity-0" id="heroStats">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold counter" data-target="50000">0</div>
+                    <div class="text-sm opacity-80">Sq Ft Available</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold counter" data-target="24">0</div>
+                    <div class="text-sm opacity-80">Hour Security</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold counter" data-target="100">0</div>
+                    <div class="text-sm opacity-80">Happy Clients</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white opacity-0" id="scrollIndicator">
+            <div class="scroll-indicator flex flex-col items-center cursor-pointer" onclick="scrollToSection('overview')">
+                <span class="text-sm mb-2">Scroll to explore</span>
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SERVICE OVERVIEW ==================== -->
+    <section class="py-24 relative" id="overview" style="background: var(--off-white);">
+        <!-- Read Progress -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gray-200">
+            <div class="h-full transition-all duration-300" id="sectionProgress" style="background: var(--primary-green); width: 0%;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="tilt-card p-8 rounded-2xl bg-white shadow-xl reveal" id="overviewCard">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full mb-6" style="background: rgba(153, 176, 118, 0.2);">
+                        <i class="fas fa-warehouse mr-2" style="color: var(--primary-green);"></i>
+                        <span class="text-sm font-semibold" style="color: var(--primary-green);">Service Overview</span>
+                    </div>
+                    
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6" style="color: var(--dark-text);">
+                        Premium Storage Facilities for 
+                        <span style="color: var(--primary-green);">Growing Businesses</span>
+                    </h2>
+
+                    <p class="text-lg mb-6" style="color: var(--muted-gray);">
+                        Our <span class="highlight-text px-1 font-semibold">state-of-the-art warehouse and godown facilities</span> 
+                        in Thika provide the perfect solution for businesses seeking reliable, secure, and 
+                        cost-effective storage options. Whether you're a vendor looking for short-term space 
+                        or an agribusiness needing long-term storage solutions, we have you covered.
+                    </p>
+
+                    <p class="text-lg mb-6" style="color: var(--muted-gray);">
+                        Located strategically within the <span class="highlight-text px-1 font-semibold">Twiga Foods distribution network</span>, 
+                        our facilities offer unmatched accessibility to major markets in Nairobi and Central Kenya. 
+                        With flexible rental terms and professional management, we ensure your goods are stored 
+                        safely and efficiently.
+                    </p>
+
+                    <p class="text-lg" style="color: var(--muted-gray);">
+                        Our commitment to <span class="highlight-text px-1 font-semibold">quality and reliability</span> 
+                        has made us the trusted choice for over 100 businesses in the agricultural and retail sectors.
+                    </p>
+                </div>
+
+                <!-- Image/Visual -->
+                <div class="relative reveal-right">
+                    <div class="rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80" 
+                             alt="Modern Warehouse Facility" 
+                             class="w-full h-96 object-cover"
+                             loading="lazy">
+                    </div>
+                    <!-- Floating Stats Card -->
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl badge-3d">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background: var(--secondary-green);">
+                                <i class="fas fa-shield-alt text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold" style="color: var(--primary-green);">100%</div>
+                                <div class="text-sm" style="color: var(--muted-gray);">Secure Storage</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== KEY FEATURES ==================== -->
+    <section class="py-24" id="features" style="background: linear-gradient(180deg, var(--off-white), white);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4" 
+                      style="background: rgba(153, 176, 118, 0.2); color: var(--primary-green);">
+                    <i class="fas fa-bolt mr-2"></i>Key Features
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--dark-text);">
+                    Why Choose Our Facilities?
+                </h2>
+                <p class="text-lg max-w-2xl mx-auto" style="color: var(--muted-gray);">
+                    Experience world-class storage solutions designed for the modern agribusiness
+                </p>
+            </div>
+
+            <!-- Feature Cards Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Feature 1 -->
+                <div class="flip-card feature-card" data-delay="0">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front p-6 flex flex-col items-center justify-center text-center glow-effect" 
+                             style="background: white; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 icon-float" 
+                                 style="background: var(--secondary-green);">
+                                <i class="fas fa-handshake text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Flexible Terms</h3>
+                            <p class="text-sm" style="color: var(--muted-gray);">Daily, weekly, or monthly rentals</p>
+                            <div class="mt-4 text-xs" style="color: var(--primary-green);">
+                                <i class="fas fa-sync-alt mr-1"></i> Hover to learn more
+                            </div>
+                        </div>
+                        <div class="flip-card-back p-6 flex flex-col justify-center" 
+                             style="background: var(--primary-green);">
+                            <h3 class="text-xl font-bold mb-4 text-white">Flexible Terms</h3>
+                            <ul class="text-white text-sm space-y-2">
+                                <li><i class="fas fa-check mr-2"></i>No long-term commitments required</li>
+                                <li><i class="fas fa-check mr-2"></i>Scale up or down as needed</li>
+                                <li><i class="fas fa-check mr-2"></i>Competitive daily rates</li>
+                                <li><i class="fas fa-check mr-2"></i>Easy contract modifications</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="flip-card feature-card" data-delay="0.15">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front p-6 flex flex-col items-center justify-center text-center glow-effect" 
+                             style="background: white; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 icon-float" 
+                                 style="background: var(--secondary-green); animation-delay: 0.5s;">
+                                <i class="fas fa-lock text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Secure Facilities</h3>
+                            <p class="text-sm" style="color: var(--muted-gray);">24/7 security & monitoring</p>
+                            <div class="mt-4 text-xs" style="color: var(--primary-green);">
+                                <i class="fas fa-sync-alt mr-1"></i> Hover to learn more
+                            </div>
+                        </div>
+                        <div class="flip-card-back p-6 flex flex-col justify-center" 
+                             style="background: var(--primary-green);">
+                            <h3 class="text-xl font-bold mb-4 text-white">Secure Facilities</h3>
+                            <ul class="text-white text-sm space-y-2">
+                                <li><i class="fas fa-check mr-2"></i>CCTV surveillance coverage</li>
+                                <li><i class="fas fa-check mr-2"></i>Professional security personnel</li>
+                                <li><i class="fas fa-check mr-2"></i>Access control systems</li>
+                                <li><i class="fas fa-check mr-2"></i>Fire safety equipment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="flip-card feature-card" data-delay="0.3">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front p-6 flex flex-col items-center justify-center text-center glow-effect" 
+                             style="background: white; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 icon-float" 
+                                 style="background: var(--secondary-green); animation-delay: 1s;">
+                                <i class="fas fa-certificate text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Quality Assured</h3>
+                            <p class="text-sm" style="color: var(--muted-gray);">Maintained to highest standards</p>
+                            <div class="mt-4 text-xs" style="color: var(--primary-green);">
+                                <i class="fas fa-sync-alt mr-1"></i> Hover to learn more
+                            </div>
+                        </div>
+                        <div class="flip-card-back p-6 flex flex-col justify-center" 
+                             style="background: var(--primary-green);">
+                            <h3 class="text-xl font-bold mb-4 text-white">Quality Assured</h3>
+                            <ul class="text-white text-sm space-y-2">
+                                <li><i class="fas fa-check mr-2"></i>Regular pest control</li>
+                                <li><i class="fas fa-check mr-2"></i>Climate monitoring</li>
+                                <li><i class="fas fa-check mr-2"></i>Clean, dry environments</li>
+                                <li><i class="fas fa-check mr-2"></i>Proper ventilation systems</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="flip-card feature-card" data-delay="0.45">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front p-6 flex flex-col items-center justify-center text-center glow-effect" 
+                             style="background: white; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 icon-float" 
+                                 style="background: var(--secondary-green); animation-delay: 1.5s;">
+                                <i class="fas fa-expand-arrows-alt text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Scalable Capacity</h3>
+                            <p class="text-sm" style="color: var(--muted-gray);">From 100 to 50,000 sq ft</p>
+                            <div class="mt-4 text-xs" style="color: var(--primary-green);">
+                                <i class="fas fa-sync-alt mr-1"></i> Hover to learn more
+                            </div>
+                        </div>
+                        <div class="flip-card-back p-6 flex flex-col justify-center" 
+                             style="background: var(--primary-green);">
+                            <h3 class="text-xl font-bold mb-4 text-white">Scalable Capacity</h3>
+                            <ul class="text-white text-sm space-y-2">
+                                <li><i class="fas fa-check mr-2"></i>Multiple unit sizes available</li>
+                                <li><i class="fas fa-check mr-2"></i>Combine units as you grow</li>
+                                <li><i class="fas fa-check mr-2"></i>Seasonal expansion options</li>
+                                <li><i class="fas fa-check mr-2"></i>Priority access for clients</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section class="py-24 relative overflow-hidden" id="process" style="background: var(--off-white);">
+        <!-- Background Blobs -->
+        <div class="absolute top-0 right-0 w-96 h-96 rounded-full opacity-10 blob" style="background: var(--secondary-green);"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full opacity-10 blob" style="background: var(--primary-green); animation-delay: -3s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Section Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4" 
+                      style="background: rgba(153, 176, 118, 0.2); color: var(--primary-green);">
+                    <i class="fas fa-route mr-2"></i>How It Works
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--dark-text);">
+                    Simple Process, Seamless Experience
+                </h2>
+                <p class="text-lg max-w-2xl mx-auto" style="color: var(--muted-gray);">
+                    Get started with our warehouse rental in four easy steps
+                </p>
+            </div>
+
+            <!-- Steps Timeline -->
+            <div class="relative">
+                <!-- Connection Line SVG -->
+                <svg class="hidden lg:block absolute top-1/2 left-0 w-full h-2 transform -translate-y-1/2" style="z-index: 0;">
+                    <line x1="12.5%" y1="50%" x2="87.5%" y2="50%" 
+                          stroke="#99B076" stroke-width="3" stroke-dasharray="10,5" 
+                          class="draw-line" id="timelineLine"/>
+                </svg>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="step-card bg-white rounded-2xl p-6 shadow-xl text-center process-step" data-step="1">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto animated-gradient">
+                                <span class="text-3xl font-bold text-white counter" data-target="1">0</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center" 
+                                 style="background: var(--accent-yellow);">
+                                <i class="fas fa-comments text-sm text-white"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Inquiry</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">
+                            Reach out to our team with your storage requirements. We'll understand your needs and timeline.
+                        </p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="step-card bg-white rounded-2xl p-6 shadow-xl text-center process-step" data-step="2">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto animated-gradient">
+                                <span class="text-3xl font-bold text-white counter" data-target="2">0</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center" 
+                                 style="background: var(--accent-yellow);">
+                                <i class="fas fa-clipboard-check text-sm text-white"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Solution</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">
+                            We propose the ideal space configuration and rental terms tailored to your business.
+                        </p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="step-card bg-white rounded-2xl p-6 shadow-xl text-center process-step" data-step="3">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto animated-gradient">
+                                <span class="text-3xl font-bold text-white counter" data-target="3">0</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center" 
+                                 style="background: var(--accent-yellow);">
+                                <i class="fas fa-file-signature text-sm text-white"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Agreement</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">
+                            Simple paperwork and quick onboarding. Move in within 24-48 hours of agreement.
+                        </p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="step-card bg-white rounded-2xl p-6 shadow-xl text-center process-step" data-step="4">
+                        <div class="relative inline-block mb-6">
+                            <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto animated-gradient">
+                                <span class="text-3xl font-bold text-white counter" data-target="4">0</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center" 
+                                 style="background: var(--accent-yellow);">
+                                <i class="fas fa-headset text-sm text-white"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Support</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">
+                            Ongoing support, facility management, and flexibility to adapt as your needs change.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== BENEFITS ==================== -->
+    <section class="py-24 relative" id="benefits" style="background: white;">
+        <!-- Animated Blobs -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-20 w-72 h-72 rounded-full opacity-20 blob" style="background: var(--secondary-green);"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 rounded-full opacity-10 blob" style="background: var(--primary-green); animation-delay: -4s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Section Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4" 
+                      style="background: rgba(153, 176, 118, 0.2); color: var(--primary-green);">
+                    <i class="fas fa-chart-line mr-2"></i>Client Benefits
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--dark-text);">
+                    Benefits That Drive Growth
+                </h2>
+                <p class="text-lg max-w-2xl mx-auto" style="color: var(--muted-gray);">
+                    Partner with us and unlock measurable advantages for your business
+                </p>
+            </div>
+
+            <!-- Benefits Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Benefit 1 -->
+                <div class="benefit-card bg-white rounded-2xl p-8 shadow-xl border border-gray-100 glow-effect magnetic-card reveal-left">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 badge-3d" 
+                             style="background: var(--accent-yellow);">
+                            <i class="fas fa-piggy-bank text-xl" style="color: var(--dark-text);"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Cost Savings</h3>
+                            <p class="text-sm mb-4" style="color: var(--muted-gray);">Reduce overhead with competitive rates and eliminate the need for capital investment in storage infrastructure.</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl font-bold counter" data-target="30" style="color: var(--primary-green);">0</span>
+                                <span class="text-lg font-bold" style="color: var(--primary-green);">%</span>
+                                <span class="text-sm" style="color: var(--muted-gray);">Avg. Cost Reduction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="benefit-card bg-white rounded-2xl p-8 shadow-xl border border-gray-100 glow-effect magnetic-card reveal">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 badge-3d" 
+                             style="background: var(--accent-yellow); animation-delay: -1s;">
+                            <i class="fas fa-clock text-xl" style="color: var(--dark-text);"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Reliability</h3>
+                            <p class="text-sm mb-4" style="color: var(--muted-gray);">Consistent availability and professional management ensure your operations run smoothly every day.</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl font-bold counter" data-target="99" style="color: var(--primary-green);">0</span>
+                                <span class="text-lg font-bold" style="color: var(--primary-green);">%</span>
+                                <span class="text-sm" style="color: var(--muted-gray);">Uptime Guaranteed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="benefit-card bg-white rounded-2xl p-8 shadow-xl border border-gray-100 glow-effect magnetic-card reveal-right">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 badge-3d" 
+                             style="background: var(--accent-yellow); animation-delay: -2s;">
+                            <i class="fas fa-bolt text-xl" style="color: var(--dark-text);"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Efficiency</h3>
+                            <p class="text-sm mb-4" style="color: var(--muted-gray);">Strategic location reduces transportation time and costs, getting your products to market faster.</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl font-bold counter" data-target="40" style="color: var(--primary-green);">0</span>
+                                <span class="text-lg font-bold" style="color: var(--primary-green);">%</span>
+                                <span class="text-sm" style="color: var(--muted-gray);">Faster Delivery</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefit 4 -->
+                <div class="benefit-card bg-white rounded-2xl p-8 shadow-xl border border-gray-100 glow-effect magnetic-card reveal-left">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 badge-3d" 
+                             style="background: var(--accent-yellow); animation-delay: -3s;">
+                            <i class="fas fa-chart-line text-xl" style="color: var(--dark-text);"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Growth Support</h3>
+                            <p class="text-sm mb-4" style="color: var(--muted-gray);">Scale your storage seamlessly as your business grows without the hassle of relocation.</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl font-bold" style="color: var(--primary-green);">∞</span>
+                                <span class="text-sm" style="color: var(--muted-gray);">Scalability Options</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefit 5 -->
+                <div class="benefit-card bg-white rounded-2xl p-8 shadow-xl border border-gray-100 glow-effect magnetic-card reveal">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 badge-3d" 
+                             style="background: var(--accent-yellow); animation-delay: -4s;">
+                            <i class="fas fa-shield-alt text-xl" style="color: var(--dark-text);"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Reduced Risk</h3>
+                            <p class="text-sm mb-4" style="color: var(--muted-gray);">Professional security and proper storage conditions minimize loss, theft, and spoilage risks.</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl font-bold counter" data-target="95" style="color: var(--primary-green);">0</span>
+                                <span class="text-lg font-bold" style="color: var(--primary-green);">%</span>
+                                <span class="text-sm" style="color: var(--muted-gray);">Risk Mitigation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefit 6 -->
+                <div class="benefit-card bg-white rounded-2xl p-8 shadow-xl border border-gray-100 glow-effect magnetic-card reveal-right">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 badge-3d" 
+                             style="background: var(--accent-yellow); animation-delay: -5s;">
+                            <i class="fas fa-network-wired text-xl" style="color: var(--dark-text);"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2" style="color: var(--dark-text);">Network Access</h3>
+                            <p class="text-sm mb-4" style="color: var(--muted-gray);">Connect with Twiga's extensive distribution network and potential business partners.</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl font-bold counter" data-target="500" style="color: var(--primary-green);">0</span>
+                                <span class="text-lg font-bold" style="color: var(--primary-green);">+</span>
+                                <span class="text-sm" style="color: var(--muted-gray);">Business Network</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== WHO THIS IS FOR ==================== -->
+    <section class="py-24" id="clients" style="background: var(--off-white);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4" 
+                      style="background: rgba(153, 176, 118, 0.2); color: var(--primary-green);">
+                    <i class="fas fa-users mr-2"></i>Who This Is For
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--dark-text);">
+                    Ideal For Your Business Type
+                </h2>
+                <p class="text-lg max-w-2xl mx-auto" style="color: var(--muted-gray);">
+                    Our facilities serve a diverse range of businesses in the agricultural value chain
+                </p>
+            </div>
+
+            <!-- Client Types Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Client Type 1 -->
+                <div class="client-card bg-white rounded-2xl p-8 text-center shadow-lg glow-effect magnetic-card reveal" data-delay="0">
+                    <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" 
+                         style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));">
+                        <i class="fas fa-store text-4xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Vendors</h3>
+                    <p class="text-sm" style="color: var(--muted-gray);">
+                        Independent vendors needing flexible, short-term storage for their inventory before market distribution.
+                    </p>
+                </div>
+
+                <!-- Client Type 2 -->
+                <div class="client-card bg-white rounded-2xl p-8 text-center shadow-lg glow-effect magnetic-card reveal" data-delay="0.15">
+                    <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" 
+                         style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));">
+                        <i class="fas fa-boxes text-4xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Wholesalers</h3>
+                    <p class="text-sm" style="color: var(--muted-gray);">
+                        Bulk buyers and distributors requiring large-scale storage with easy logistics access.
+                    </p>
+                </div>
+
+                <!-- Client Type 3 -->
+                <div class="client-card bg-white rounded-2xl p-8 text-center shadow-lg glow-effect magnetic-card reveal" data-delay="0.3">
+                    <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" 
+                         style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));">
+                        <i class="fas fa-shopping-basket text-4xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Market Traders</h3>
+                    <p class="text-sm" style="color: var(--muted-gray);">
+                        Traders looking for convenient storage near major markets with competitive daily rates.
+                    </p>
+                </div>
+
+                <!-- Client Type 4 -->
+                <div class="client-card bg-white rounded-2xl p-8 text-center shadow-lg glow-effect magnetic-card reveal" data-delay="0.45">
+                    <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" 
+                         style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));">
+                        <i class="fas fa-seedling text-4xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" style="color: var(--dark-text);">Agribusinesses</h3>
+                    <p class="text-sm" style="color: var(--muted-gray);">
+                        Agricultural businesses needing professional storage for produce, seeds, and farming supplies.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TRUST SIGNALS ==================== -->
+    <section class="py-24" id="trust" style="background: white;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4" 
+                      style="background: rgba(153, 176, 118, 0.2); color: var(--primary-green);">
+                    <i class="fas fa-award mr-2"></i>Why Trust Us
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4" style="color: var(--dark-text);">
+                    Built on Trust & Excellence
+                </h2>
+            </div>
+
+            <!-- Trust Points -->
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <!-- Trust Item 1 -->
+                <div class="flex items-start gap-4 p-6 bg-gray-50 rounded-xl trust-item reveal-left">
+                    <svg class="checkmark w-12 h-12 shrink-0" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" stroke="#44713F" stroke-width="2"/>
+                        <path class="checkmark-check" fill="none" stroke="#44713F" stroke-width="3" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                    <div>
+                        <h3 class="text-lg font-bold mb-2" style="color: var(--dark-text);">Professional Warehouse Management</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">Expert team ensuring optimal storage conditions, inventory tracking, and efficient space utilization.</p>
+                    </div>
+                </div>
+
+                <!-- Trust Item 2 -->
+                <div class="flex items-start gap-4 p-6 bg-gray-50 rounded-xl trust-item reveal-right">
+                    <svg class="checkmark w-12 h-12 shrink-0" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" stroke="#44713F" stroke-width="2"/>
+                        <path class="checkmark-check" fill="none" stroke="#44713F" stroke-width="3" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                    <div>
+                        <h3 class="text-lg font-bold mb-2" style="color: var(--dark-text);">Reliable Distribution Network</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">Part of Twiga's extensive logistics infrastructure covering major markets across Kenya.</p>
+                    </div>
+                </div>
+
+                <!-- Trust Item 3 -->
+                <div class="flex items-start gap-4 p-6 bg-gray-50 rounded-xl trust-item reveal-left">
+                    <svg class="checkmark w-12 h-12 shrink-0" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" stroke="#44713F" stroke-width="2"/>
+                        <path class="checkmark-check" fill="none" stroke="#44713F" stroke-width="3" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                    <div>
+                        <h3 class="text-lg font-bold mb-2" style="color: var(--dark-text);">Trusted Supplier Partnerships</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">Strong relationships with leading agricultural suppliers and vendors across the region.</p>
+                    </div>
+                </div>
+
+                <!-- Trust Item 4 -->
+                <div class="flex items-start gap-4 p-6 bg-gray-50 rounded-xl trust-item reveal-right">
+                    <svg class="checkmark w-12 h-12 shrink-0" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" stroke="#44713F" stroke-width="2"/>
+                        <path class="checkmark-check" fill="none" stroke="#44713F" stroke-width="3" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                    <div>
+                        <h3 class="text-lg font-bold mb-2" style="color: var(--dark-text);">Compliance with Quality Standards</h3>
+                        <p class="text-sm" style="color: var(--muted-gray);">Meeting and exceeding industry standards for food-safe storage and handling practices.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Counter Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+                <div class="text-center p-6 rounded-xl" style="background: var(--off-white);">
+                    <div class="text-4xl font-bold mb-2 counter" data-target="500" style="color: var(--primary-green);">0</div>
+                    <div class="text-sm font-medium" style="color: var(--muted-gray);">Partner Businesses</div>
+                </div>
+                <div class="text-center p-6 rounded-xl" style="background: var(--off-white);">
+                    <div class="text-4xl font-bold mb-2"><span class="counter" data-target="10000" style="color: var(--primary-green);">0</span>+</div>
+                    <div class="text-sm font-medium" style="color: var(--muted-gray);">Monthly Deliveries</div>
+                </div>
+                <div class="text-center p-6 rounded-xl" style="background: var(--off-white);">
+                    <div class="text-4xl font-bold mb-2 counter" data-target="50000" style="color: var(--primary-green);">0</div>
+                    <div class="text-sm font-medium" style="color: var(--muted-gray);">Sq Ft Warehouse Space</div>
+                </div>
+                <div class="text-center p-6 rounded-xl" style="background: var(--off-white);">
+                    <div class="text-4xl font-bold mb-2"><span class="counter" data-target="5" style="color: var(--primary-green);">0</span>+</div>
+                    <div class="text-sm font-medium" style="color: var(--muted-gray);">Years Experience</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CTA SECTION ==================== -->
+    <section class="py-24 relative overflow-hidden" id="cta">
+        <div class="absolute inset-0 animated-gradient opacity-95"></div>
+        
+        <!-- Floating particles background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-10 left-10 w-4 h-4 rounded-full bg-white opacity-30" style="animation: float 4s ease-in-out infinite;"></div>
+            <div class="absolute top-1/4 right-20 w-6 h-6 rounded-full bg-white opacity-20" style="animation: float 5s ease-in-out infinite 1s;"></div>
+            <div class="absolute bottom-20 left-1/4 w-3 h-3 rounded-full bg-white opacity-25" style="animation: float 3s ease-in-out infinite 0.5s;"></div>
+            <div class="absolute bottom-1/3 right-1/3 w-5 h-5 rounded-full bg-white opacity-15" style="animation: float 6s ease-in-out infinite 2s;"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="bg-white/10 backdrop-blur-sm rounded-3xl p-12 shadow-2xl reveal" style="transform-style: preserve-3d;">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
+                    Ready to Secure Your Storage Space?
+                </h2>
+                <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+                    Join hundreds of satisfied businesses who trust Twiga Foods Thika Depot for their storage needs. Get started today with a free consultation.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button class="btn-3d px-10 py-5 rounded-full text-lg font-bold flex items-center gap-3 w-full sm:w-auto justify-center"
+                            style="background: var(--accent-yellow); color: var(--dark-text);"
+                            onclick="createRipple(event); createParticles(event)">
+                        <i class="fas fa-file-invoice"></i>
+                        Request a Quote
+                    </button>
+                    <button class="btn-3d px-10 py-5 rounded-full text-lg font-bold flex items-center gap-3 w-full sm:w-auto justify-center border-2 border-white text-white bg-transparent hover:bg-white/10"
+                            onclick="createRipple(event)">
+                        <i class="fas fa-phone"></i>
+                        Speak to Our Team
+                    </button>
+                </div>
+
+                <p class="text-white/70 mt-8 text-sm">
+                    <i class="fas fa-bolt mr-2"></i>Quick response within 2 hours during business hours
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT SECTION ==================== -->
+    <section class="py-24" id="contact" style="background: var(--off-white);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white rounded-2xl p-8 shadow-xl reveal-left">
+                    <h3 class="text-2xl font-bold mb-6" style="color: var(--dark-text);">Send Us a Message</h3>
+                    <form id="contactForm" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2" style="color: var(--dark-text);">Full Name</label>
+                                <input type="text" required 
+                                       class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#44713F] focus:ring-2 focus:ring-[#44713F]/20 transition outline-none"
+                                       placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" style="color: var(--dark-text);">Phone Number</label>
+                                <input type="tel" required 
+                                       class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#44713F] focus:ring-2 focus:ring-[#44713F]/20 transition outline-none"
+                                       placeholder="+254 7XX XXX XXX">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" style="color: var(--dark-text);">Email Address</label>
+                            <input type="email" required 
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#44713F] focus:ring-2 focus:ring-[#44713F]/20 transition outline-none"
+                                   placeholder="john@company.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" style="color: var(--dark-text);">Business Type</label>
+                            <select class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#44713F] focus:ring-2 focus:ring-[#44713F]/20 transition outline-none">
+                                <option>Vendor</option>
+                                <option>Wholesaler</option>
+                                <option>Market Trader</option>
+                                <option>Agribusiness</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" style="color: var(--dark-text);">Message</label>
+                            <textarea rows="4" 
+                                      class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#44713F] focus:ring-2 focus:ring-[#44713F]/20 transition outline-none resize-none"
+                                      placeholder="Tell us about your storage needs..."></textarea>
+                        </div>
+                        <button type="submit" 
+                                class="btn-3d w-full py-4 rounded-lg text-white font-bold text-lg"
+                                style="background: var(--primary-green);"
+                                onclick="createRipple(event)">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="reveal-right">
+                    <h3 class="text-2xl font-bold mb-6" style="color: var(--dark-text);">Get In Touch</h3>
+                    <p class="text-lg mb-8" style="color: var(--muted-gray);">
+                        Have questions about our warehouse rental services? Our team is ready to help you find the perfect storage solution for your business.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4 p-4 bg-white rounded-xl shadow-md glow-effect">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style="background: var(--secondary-green);">
+                                <i class="fas fa-map-marker-alt text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold" style="color: var(--dark-text);">Location</h4>
+                                <p style="color: var(--muted-gray);">W3VV+9QQ, Thika, Kiambu County, Kenya</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 bg-white rounded-xl shadow-md glow-effect">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style="background: var(--secondary-green);">
+                                <i class="fas fa-phone text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold" style="color: var(--dark-text);">Phone</h4>
+                                <p style="color: var(--muted-gray);">+254 700 000 000</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 bg-white rounded-xl shadow-md glow-effect">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style="background: var(--secondary-green);">
+                                <i class="fas fa-envelope text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold" style="color: var(--dark-text);">Email</h4>
+                                <p style="color: var(--muted-gray);">info@twigafoods-thika.co.ke</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 bg-white rounded-xl shadow-md glow-effect">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style="background: var(--secondary-green);">
+                                <i class="fas fa-clock text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold" style="color: var(--dark-text);">Business Hours</h4>
+                                <p style="color: var(--muted-gray);">Monday - Saturday: 6AM - 8PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="py-16 text-white" style="background: var(--primary-green);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                            <i class="fas fa-leaf text-2xl" style="color: var(--primary-green);"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl">Twiga Foods</h4>
+                            <p class="text-green-200 text-sm">Thika Depot</p>
+                        </div>
+                    </div>
+                    <p class="text-green-100 mb-6">
+                        Your trusted partner for B2B agricultural products distribution and premium warehouse facilities in Thika, Kenya.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#hero" class="text-green-100 hover:text-white transition">Home</a></li>
+                        <li><a href="#overview" class="text-green-100 hover:text-white transition">About Us</a></li>
+                        <li><a href="#features" class="text-green-100 hover:text-white transition">Services</a></li>
+                        <li><a href="#benefits" class="text-green-100 hover:text-white transition">Facilities</a></li>
+                        <li><a href="#trust" class="text-green-100 hover:text-white transition">Reviews</a></li>
+                        <li><a href="#contact" class="text-green-100 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Services -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Our Services</h4>
+                    <ul class="space-y-3">
+                        <li class="text-green-100">B2B Distribution</li>
+                        <li class="text-green-100">Warehouse Rental</li>
+                        <li class="text-green-100">Storage Solutions</li>
+                        <li class="text-green-100">Vendor Partnerships</li>
+                        <li class="text-green-100">Logistics Support</li>
+                        <li class="text-green-100">Agricultural Products</li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Contact Info</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt mt-1 text-green-300"></i>
+                            <span class="text-green-100">W3VV+9QQ, Thika<br>Kiambu County, Kenya</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-green-300"></i>
+                            <a href="tel:+254700000000" class="text-green-100 hover:text-white">+254 700 000 000</a>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-green-300"></i>
+                            <a href="mailto:info@twigafoods-thika.co.ke" class="text-green-100 hover:text-white text-sm">info@twigafoods-thika.co.ke</a>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-green-300"></i>
+                            <span class="text-green-100">Mon-Sat: 6AM-8PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-green-600 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-green-200 text-sm mb-4 md:mb-0">
+                        © 2024 Twiga Foods Thika Depot. All rights reserved.
+                    </p>
+                    <div class="flex items-center space-x-6 text-sm">
+                        <a href="#" class="text-green-200 hover:text-white transition">Privacy Policy</a>
+                        <a href="#" class="text-green-200 hover:text-white transition">Terms of Service</a>
+                        <div class="flex items-center star-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="text-green-200 ml-2">4.5/5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // ==================== HERO ANIMATIONS ====================
+        if (!prefersReducedMotion) {
+            // Hero background parallax
+            const heroBg = document.getElementById('heroBg');
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                heroBg.style.transform = `translateZ(-10px) scale(2) translateY(${scrolled * 0.3}px)`;
+            });
+
+            // Hero content animations
+            const heroTimeline = gsap.timeline({ delay: 0.3 });
+            
+            heroTimeline
+                .to('#heroBadge', { opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.7)' })
+                .to('.hero-word', { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.6, 
+                    stagger: 0.15, 
+                    ease: 'power3.out' 
+                }, '-=0.3')
+                .to('#heroSubtext', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.2')
+                .to('#heroCtas', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.3')
+                .to('#heroStats', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.2')
+                .to('#scrollIndicator', { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+
+            // Set initial states
+            gsap.set('.hero-word', { opacity: 0, y: 30 });
+            gsap.set('#heroBadge, #heroSubtext, #heroCtas, #heroStats, #scrollIndicator', { opacity: 0, y: 20 });
+        }
+
+        // ==================== PROGRESS BAR ====================
+        const progressBar = document.getElementById('progressBar');
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollTop / docHeight;
+            progressBar.style.transform = `scaleX(${scrollPercent})`;
+        });
+
+        // ==================== FIXED NAV ====================
+        const fixedNav = document.getElementById('fixedNav');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 500) {
+                fixedNav.classList.add('visible');
+            } else {
+                fixedNav.classList.remove('visible');
+            }
+        });
+
+        // ==================== SCROLL REVEAL ====================
+        const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Animate counters within this element
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => animateCounter(counter));
+                    
+                    // Animate checkmarks
+                    const checkmarks = entry.target.querySelectorAll('.checkmark');
+                    checkmarks.forEach(checkmark => checkmark.classList.add('animate'));
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ==================== FEATURE CARDS ANIMATION ====================
+        const featureCards = document.querySelectorAll('.feature-card');
+        
+        if (!prefersReducedMotion) {
+            featureCards.forEach((card, index) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    },
+                    x: index % 2 === 0 ? -100 : 100,
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: parseFloat(card.dataset.delay) || 0,
+                    ease: 'power3.out'
+                });
+            });
+        }
+
+        // ==================== PROCESS STEPS ANIMATION ====================
+        const processSteps = document.querySelectorAll('.process-step');
+        
+        if (!prefersReducedMotion) {
+            processSteps.forEach((step, index) => {
+                gsap.from(step, {
+                    scrollTrigger: {
+                        trigger: step,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    },
+                    rotateX: 45,
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: index * 0.15,
+                    ease: 'power3.out'
+                });
+            });
+
+            // Timeline line animation
+            gsap.to('#timelineLine', {
+                scrollTrigger: {
+                    trigger: '#process',
+                    start: 'top 60%',
+                    toggleActions: 'play none none none'
+                },
+                strokeDashoffset: 0,
+                duration: 1.5,
+                ease: 'power2.out'
+            });
+        }
+
+        // ==================== CLIENT CARDS ANIMATION ====================
+        const clientCards = document.querySelectorAll('.client-card');
+        
+        if (!prefersReducedMotion) {
+            clientCards.forEach((card, index) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none none'
+                    },
+                    scale: 0.8,
+                    opacity: 0,
+                    duration: 0.6,
+                    delay: parseFloat(card.dataset.delay) || 0,
+                    ease: 'back.out(1.7)'
+                });
+            });
+        }
+
+        // ==================== TRUST ITEMS ANIMATION ====================
+        const trustItems = document.querySelectorAll('.trust-item');
+        
+        trustItems.forEach(item => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const checkmark = entry.target.querySelector('.checkmark');
+                        if (checkmark) {
+                            setTimeout(() => checkmark.classList.add('animate'), 300);
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            observer.observe(item);
+        });
+
+        // ==================== COUNTER ANIMATION ====================
+        function animateCounter(counter) {
+            const target = parseInt(counter.dataset.target);
+            const duration = 2000;
+            const start = 0;
+            const startTime = performance.now();
+
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+                const current = Math.floor(start + (target - start) * easeProgress);
+                
+                counter.textContent = current.toLocaleString();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Hero stats counters
+        const heroStatsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => animateCounter(counter));
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const heroStats = document.getElementById('heroStats');
+        if (heroStats) heroStatsObserver.observe(heroStats);
+
+        // ==================== SECTION PROGRESS ====================
+        const overviewSection = document.getElementById('overview');
+        if (overviewSection) {
+            const sectionProgress = document.getElementById('sectionProgress');
+            
+            window.addEventListener('scroll', () => {
+                const rect = overviewSection.getBoundingClientRect();
+                const sectionHeight = overviewSection.offsetHeight;
+                const viewportHeight = window.innerHeight;
+                
+                if (rect.top < viewportHeight && rect.bottom > 0) {
+                    const progress = Math.min(Math.max((viewportHeight - rect.top) / sectionHeight, 0), 1);
+                    sectionProgress.style.width = `${progress * 100}%`;
+                }
+            });
+        }
+
+        // ==================== TEXT HIGHLIGHT ====================
+        const highlightTexts = document.querySelectorAll('.highlight-text');
+        
+        const highlightObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('active'), 500);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        highlightTexts.forEach(text => highlightObserver.observe(text));
+
+        // ==================== TILT CARD EFFECT ====================
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                if (prefersReducedMotion) return;
+                
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        });
+
+        // ==================== MAGNETIC EFFECT ====================
+        const magneticCards = document.querySelectorAll('.magnetic-card');
+        
+        magneticCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                if (prefersReducedMotion) return;
+                
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                card.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // ==================== BUTTON EFFECTS ====================
+        const btn3dElements = document.querySelectorAll('.btn-3d');
+        
+        btn3dElements.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                btn.style.setProperty('--x', `${x}%`);
+                btn.style.setProperty('--y', `${y}%`);
+            });
+        });
+
+        // Ripple effect
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const rect = button.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height);
+            
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+            ripple.classList.add('ripple');
+            
+            button.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        // Particle effect
+        function createParticles(event) {
+            const container = document.getElementById('particles');
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                const angle = (i / 12) * Math.PI * 2;
+                const distance = 50 + Math.random() * 50;
+                particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 800);
+            }
+        }
+
+        // ==================== SMOOTH SCROLL ====================
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ==================== FORM HANDLING ====================
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Show success state
+                const btn = contactForm.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i>Message Sent!';
+                btn.style.background = '#22c55e';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'var(--primary-green)';
+                    contactForm.reset();
+                }, 3000);
+            });
+        }
+
+        // ==================== LAZY LOAD IMAGES ====================
+        const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+        
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.remove('skeleton');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            lazyImages.forEach(img => imageObserver.observe(img));
+        }
+
+        // ==================== KEYBOARD NAVIGATION ====================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                document.body.classList.add('keyboard-navigation');
+            }
+        });
+
+        document.addEventListener('mousedown', () => {
+            document.body.classList.remove('keyboard-navigation');
+        });
+
+        // Add focus styles for keyboard navigation
+        const style = document.createElement('style');
+        style.textContent = `
+            .keyboard-navigation *:focus {
+                outline: 3px solid var(--accent-yellow) !important;
+                outline-offset: 2px;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
